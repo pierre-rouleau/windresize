@@ -861,8 +861,9 @@ horizontally and vertically."
   (interactive)
   (if (derived-mode-p 'help-mode)
       (progn
-        (require 'view)
-        (View-quit)
+        (with-no-warnings
+          (require 'view)
+          (View-quit))
 	(setq windresize-msg '("Help quit" . 2)))
     (switch-to-buffer windresize-buffer)
     (set-window-configuration windresize-window-configuration-0)
