@@ -1,4 +1,4 @@
-;;; windresize.el --- Resize windows interactively
+;;; windresize.el --- Resize windows interactively  -*- lexical-binding: t; -*-
 ;;
 ;; Copyright (C) 2011-2017  Free Software Foundation, Inc.
 ;;
@@ -46,6 +46,15 @@
 ;; list. Special thanks to Drew Adams, Juri Linkov, Stefan Monnier and
 ;; JunJie Nan for useful suggestions.
 ;;
+;; - On 2026-03-09, Pierre Rouleau fixed byte-compiler and native compiler
+;;   warnings:
+;;   - set lexical-binding  to t,
+;;   - change windresize-version from 0.6 to 0.6.1
+;;   - `windresize' no longer accept unused increment argument.
+;;   - `windresize-cancel-and-quit' now require 'view feature before
+;;     calling `View-quit'.
+;;
+;;
 ;; Also check https://www.emacswiki.org/cgi-bin/wiki/WindowResize for
 ;; general hints on window resizing.
 ;;
@@ -65,7 +74,7 @@
 
 ;;; User variables:
 
-(defconst windresize-version "0.6"
+(defconst windresize-version "0.6.1"
   "The version number of the file windresize.el.")
 
 (defcustom windresize-move-borders t
@@ -298,9 +307,8 @@ conflicts between keybindings."
 ;;; Windresize:
 
 ;;;###autoload
-(defun windresize (&optional increment)
+(defun windresize ()
   "Resize windows interactively.
-INCREMENT is the number of lines by which borders should move.
 
 By default, the method for resizing is by moving the borders.
 The left/right key will move the only movable vertical border to
@@ -331,12 +339,9 @@ and restore them with `\\[windresize-restore-window-configuration]'.
 will set the new window configuration and exit.
 
 \\{windresize-map}"
-  (interactive "P")
+  (interactive)
   (if windresize-resizing
       (windresize-exit)
-    ;; FIXME shall we exit when calling again `windresize'?
-    ;;(progn (windresize-message '("[Already resizing]" . 0))
-    ;;       (sit-for 2))
     (setq windresize-overriding-terminal-local-map-0
 	  overriding-terminal-local-map)
     (setq windresize-overriding-menu-flag-0
@@ -846,8 +851,10 @@ horizontally and vertically."
   "Cancel window resizing and quit `windresize'."
   (interactive)
   (if (derived-mode-p 'help-mode)
-      (progn (View-quit)
-	     (setq windresize-msg '("Help quit" . 2)))
+      (progn
+        (require 'view)
+        (View-quit)
+	(setq windresize-msg '("Help quit" . 2)))
     (switch-to-buffer windresize-buffer)
     (set-window-configuration windresize-window-configuration-0)
     (setq overriding-local-map-menu-flag
