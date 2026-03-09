@@ -50,7 +50,7 @@
 ;;   warnings:
 ;;   - set lexical-binding  to t,
 ;;   - change windresize-version from 0.6 to 0.6.1
-;;   - `windresize' no longer accept unused increment argument.
+;;   - `windresize' no longer accepts unused increment argument.
 ;;   - `windresize-cancel-and-quit' now require 'view feature before
 ;;     calling `View-quit'.
 ;;
