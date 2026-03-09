@@ -61,6 +61,7 @@
 ;;   - `overriding-local-map-menu-flag' is now (interactive "P").
 ;;   - Removed duplicate mapping of the = key from `windresize-map'.
 ;;   - Fix docstring typo in `windresize-up-right'.
+;;   - Clarified `windresize-windmove-relative-to-point' docstring.
 ;;   - Add a copyright notice for my changes, issued under the same license.
 ;;
 ;;
@@ -121,8 +122,8 @@ A value of 2 will display errors and messages."
   :group 'convenience)
 
 (defcustom windresize-windmove-relative-to-point 0
-  "Nil means select adjacent window relatively to the point position.
-Non-nil means select adjacent window relatively to the window
+  "Nil or 0 means select adjacent window relatively to the point position.
+Other integer values means select adjacent window relatively to the window
 edges.  See the docstring of `windmove-up' for details."
   :group 'convenience
   :type 'integer)
