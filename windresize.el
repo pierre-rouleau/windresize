@@ -1,13 +1,14 @@
 ;;; windresize.el --- Resize windows interactively  -*- lexical-binding: t; -*-
 ;;
 ;; Copyright (C) 2011-2017  Free Software Foundation, Inc.
+;; Copyright (C) 2026  Pierre Rouleau, <prouleau001@gmail.com>
 ;;
 ;; Filename: windresize.el
 ;; Author: Bastien <bzg@gnu.org>
-;; Maintainer: Bastien <bzg@gnu.org>
+;; Maintainer: Bastien <bzg@gnu.org>, Pierre Rouleau <prouleau001@gmail.com>
 ;; Keywords: window
 ;; Description: Set window configuration with keystrokes
-;; Version: 0.1
+;; Version: 0.6.1
 ;;
 ;; This program is free software; you can redistribute it and/or modify
 ;; it under the terms of the GNU General Public License as published by
@@ -46,13 +47,21 @@
 ;; list. Special thanks to Drew Adams, Juri Linkov, Stefan Monnier and
 ;; JunJie Nan for useful suggestions.
 ;;
-;; - On 2026-03-09, Pierre Rouleau fixed byte-compiler and native compiler
-;;   warnings:
-;;   - set lexical-binding  to t,
-;;   - change windresize-version from 0.6 to 0.6.1
+;; - On 2026-03-09, Pierre Rouleau fixed bugs, byte-compiler and
+;;   native compiler warnings and typos:
+;;   - Set lexical-binding  to t
+;;   - Change windresize-version from 0.6 to 0.6.1 and updated package version
+;;     to 0.6.1
 ;;   - `windresize' no longer accepts unused increment argument.
 ;;   - `windresize-cancel-and-quit' now require 'view feature before
 ;;     calling `View-quit'.
+;;   - Fix the restoration of `overriding-terminal-local-map' and
+;;     `overriding-local-map-menu-flag' variables in functions
+;;     `windresize-cancel-and-quit' and `windresize-exit'.
+;;   - `overriding-local-map-menu-flag' is now (interactive "P").
+;;   - Removed duplicate mapping of the = key from `windresize-map'.
+;;   - Fix docstring typo in `windresize-up-right'.
+;;   - Add a copyright notice for my changes, issued under the same license.
 ;;
 ;;
 ;; Also check https://www.emacswiki.org/cgi-bin/wiki/WindowResize for
@@ -236,7 +245,6 @@ conflicts between keybindings."
       (lambda() (interactive) (move-beginning-of-line 1)))
     (define-key map (kbd "C-e")
       (lambda() (interactive) (move-end-of-line 1)))
-    (define-key map "=" 'windresize-balance-windows)
     (define-key map [mouse-1] 'mouse-set-point)
     ;; help, save and exit
     (define-key map (kbd "RET") 'windresize-exit)
@@ -343,11 +351,11 @@ will set the new window configuration and exit.
   (if windresize-resizing
       (windresize-exit)
     (setq windresize-overriding-terminal-local-map-0
-	  overriding-terminal-local-map)
+          overriding-terminal-local-map)
     (setq windresize-overriding-menu-flag-0
-	  overriding-local-map-menu-flag)
+          overriding-local-map-menu-flag)
     (setq windresize-window-configuration-0
-	  (current-window-configuration))
+          (current-window-configuration))
     ;; set increment, window configuration ring, initial buffer
     (setq windresize-increment windresize-default-increment)
     (setq windresize-configuration-ring
@@ -780,7 +788,7 @@ N is the number of lines by which moving borders."
 (defun windresize-down-force-up (n)
   "If two movable borders, move the upper border.
 N is the number of lines by which moving borders."
-  (interactive)
+  (interactive "P")
   (let ((i (if n (prefix-numeric-value n)
 	     windresize-increment)))
     (windresize-down i t)))
@@ -831,7 +839,7 @@ horizontally and enlarge it vertically."
   "Call `windresize-right' and `windresize-up' successively.
 In move-borders method, move the upper-right edge of the window
 outwards.  In resize-window method, enlarge the window both
-horizontally and horizontally."
+horizontally and vertically."
   (interactive)
   (windresize-right)
   (windresize-up nil t))
@@ -858,9 +866,9 @@ horizontally and vertically."
     (switch-to-buffer windresize-buffer)
     (set-window-configuration windresize-window-configuration-0)
     (setq overriding-local-map-menu-flag
-	  windresize-overriding-terminal-local-map-0)
+          windresize-overriding-menu-flag-0)
     (setq overriding-terminal-local-map
-	  windresize-overriding-menu-flag-0)
+          windresize-overriding-terminal-local-map-0)
     (message "Window resizing quit (not saved)")
     (windresize-remove-command-hooks)
     (setq windresize-resizing nil)))
@@ -869,9 +877,9 @@ horizontally and vertically."
   "Keep this window configuration and exit `windresize'."
   (interactive)
   (setq overriding-local-map-menu-flag
-	windresize-overriding-terminal-local-map-0)
+        windresize-overriding-menu-flag-0)
   (setq overriding-terminal-local-map
-	windresize-overriding-menu-flag-0)
+        windresize-overriding-terminal-local-map-0)
   (message "Window configuration set")
   (windresize-remove-command-hooks)
   (setq windresize-resizing nil))
