@@ -856,14 +856,15 @@ horizontally and vertically."
 
 ;;; Cancel, exit and help:
 
+(declare-function View-quit "view" ())
+
 (defun windresize-cancel-and-quit ()
   "Cancel window resizing and quit `windresize'."
   (interactive)
   (if (derived-mode-p 'help-mode)
       (progn
-        (with-no-warnings
-          (require 'view)
-          (View-quit))
+        (require 'view)
+        (View-quit)
 	(setq windresize-msg '("Help quit" . 2)))
     (switch-to-buffer windresize-buffer)
     (set-window-configuration windresize-window-configuration-0)
