@@ -856,6 +856,8 @@ horizontally and vertically."
 
 ;;; Cancel, exit and help:
 
+(declare-function View-quit "view" ())
+
 (defun windresize-cancel-and-quit ()
   "Cancel window resizing and quit `windresize'."
   (interactive)
