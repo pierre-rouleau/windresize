@@ -58,7 +58,7 @@
 ;;   - Fix the restoration of `overriding-terminal-local-map' and
 ;;     `overriding-local-map-menu-flag' variables in functions
 ;;     `windresize-cancel-and-quit' and `windresize-exit'.
-;;   - `overriding-local-map-menu-flag' is now (interactive "P").
+;;   - `windresize-down-force-up' is now (interactive "P").
 ;;   - Removed duplicate mapping of the = key from `windresize-map'.
 ;;   - Fix docstring typo in `windresize-up-right'.
 ;;   - Clarified `windresize-windmove-relative-to-point' docstring.
